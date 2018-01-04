@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+
+  </head>
+  <body>
+
+    <div class="calculator">
+      <div class="screen">
+        <input type="text" id="inputSCreen" class="inputSCreen" value="">
+      </div>
+      <div class="buttons">
+        <button type="button" id="clear">C</button>
+        <button type="button" value="(" class="calButton operator">(</button>
+        <button type="button" value=")" class="calButton operator">)</button>
+        <button type="button" value="/" class="calButton operator">&divide</button>
+
+        <button type="button" value="7" class="calButton">7</button>
+        <button type="button" value="8" class="calButton">8</button>
+        <button type="button" value="9" class="calButton">9</button>
+        <button type="button" value="*" class="calButton operator">x</button>
+
+        <button type="button" value="4" class="calButton">4</button>
+        <button type="button" value="5" class="calButton">5</button>
+        <button type="button" value="6" class="calButton">6</button>
+        <button type="button" value="-" class="calButton">-</button>
+
+        <button type="button" value="1" class="calButton">1</button>
+        <button type="button" value="2" class="calButton">2</button>
+        <button type="button" value="3" class="calButton">3</button>
+        <button type="button" value="+" class="calButton operator">+</button>
+
+        <button type="button" value="0" class="calButton">0</button>
+        <button type="button" value="."class="calButton">.</button>
+        <button type="button" id="delete" class="operator">⬅</button>
+        <button type="button" id="equal" class="operator">=</button>
+
+      </div>
+    </div>
+    <script src="./lib/jquery-3.2.1.js"></script>
+    <script type="text/javascript">
+      var calcStringInput = ""
+
+      $(".buttons .calButton").on("click", function() {
+      calcStringInput = calcStringInput + getElementValueAttr(this);
+      renderCalScreen(calcStringInput);
+      });
+
+      $("#clear").on("click", function() {
+        clearInput()
+        renderCalScreen("");
+      });
+
+      $("#equal").on("click", function() {
+        renderCalScreen(
+          parseInput(
+            getInputScreen()
+          )
+        );
+        clearInput();
+      });
+
+      $('#delete').on('click', function() {
+        calcStringInput = calcStringInput.slice(0, -1);
+        renderCalScreen(calcStringInput)
+      });
+
+      function getElementValueAttr(element) {
+        return element.value;
+      }
+
+      function renderCalScreen(value) {
+        $("#inputSCreen").val(value)
+      }
+
+      function getInputScreen() {
+        return $("#inputSCreen").val();
+      }
+
+      function clearInput() {
+        calcStringInput = "";
+      }
+
+      function parseInput(value) {
+        var parsedInput = [];
+        var value = value.split("");
+        var reg = new RegExp('^[0-9]$');
+        value.forEach(function(element) {
+          //if it's a number
+          if(reg.test(element) || element === ".") {
+            parsedInput.push(element)
+          } else {
+            parsedInput.push(" ")
+            parsedInput.push(element);
+            parsedInput.push(" ")
+          }
+        });
+        console.log(parsedInput);
+        parsedInput = parsedInput.join("")
+
+        console.log("parseInput function");
+        console.log("===================");
+
+        console.log("parsed: ", parsedInput);
+
+        console.log("result: ", newEval(parsedInput));
+
+        return String(newEval(parsedInput))
+      }
+
+
+
+      function newEval(fn) {
+        return new Function('return ' + fn)();
+      }
+    </script>
+  </body>
+</html>
